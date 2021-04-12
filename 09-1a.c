@@ -7,8 +7,7 @@
 int main(int argc, char *argv[], char *envp[])
 {
   int    semid;        // IPC descriptor for an array of IPC semaphores
-  char   pathname[]="09-1a.c"; // The file name used to generate the key.
-                               // A file with this name must exist in the current directory
+  char   pathname[]="09-1a.c";
   key_t  key;          // IPC key
   struct sembuf mybuf; // Structure for specifying operations on a semaphore.
 
@@ -16,11 +15,7 @@ int main(int argc, char *argv[], char *envp[])
     printf("Can\'t generate key\n");
     exit(-1);
   }
-  //
-  // Try to access by key the array of semaphores, if it exists,
-  // or create it from a single semaphore if it does not exist yet,
-  // with read & write access for all users.
-  //
+
   if ((semid = semget(key, 1, 0666 | IPC_CREAT)) < 0) {
     printf("Can\'t create semaphore set\n");
     exit(-1);
@@ -31,8 +26,9 @@ int main(int argc, char *argv[], char *envp[])
   // The semaphore array consists of one semaphore with number 0.
   // The opcode is -1.
   //
+
   mybuf.sem_num = 0;
-  mybuf.sem_op  = -1;
+  mybuf.sem_op  = -5;
   mybuf.sem_flg = 0;
 
   if (semop(semid, &mybuf, 1) < 0) {

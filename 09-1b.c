@@ -26,6 +26,7 @@ int main(int argc, char *argv[], char *envp[])
   // The semaphore array consists of one semaphore with number 0.
   // The opcode is 1.
   //
+
   mybuf.sem_num = 0;
   mybuf.sem_op  = 1;
   mybuf.sem_flg = 0;
@@ -35,6 +36,7 @@ int main(int argc, char *argv[], char *envp[])
     exit(-1);
   }
 
+  printf("%d", );
   printf("The condition is present\n");
   return 0;
 }
