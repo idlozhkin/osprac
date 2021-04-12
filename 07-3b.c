@@ -4,17 +4,27 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <sys/sem.h>
 
 int main()
 {
   int     *array;
   int     shmid;
+  int     semid;
   int     new = 1;
   char    pathname[] = "07-3a.c";
   key_t   key;
   long    i;
+  struct  sembuf mybuf;
+  mybuf.sem_num = 0;
+  mybuf.sem_flg = 0;
 
   if ((key = ftok(pathname,0)) < 0) {
+    printf("Can\'t generate key\n");
+    exit(-1);
+  }
+
+  if((semid = semget(key, 1, 0666 | IPC_CREAT)) < 0) {
     printf("Can\'t generate key\n");
     exit(-1);
   }
@@ -37,6 +47,16 @@ int main()
     exit(-1);
   }
 
+  mybuf.sem_op = 0;
+  if(semop(semid, &mybuf, 1) < 0){
+    exit(-1);
+  } 
+
+  mybuf.sem_op = 1;
+  if(semop(semid, &mybuf, 1) < 0){
+    exit(-1);
+  } 
+
   if (new) {
     array[0] =  0;
     array[1] =  1;
@@ -55,6 +75,12 @@ int main()
     printf("Can't detach shared memory\n");
     exit(-1);
   }
+
+  mybuf.sem_op = -1;
+  if(semop(semid, &mybuf, 1) < 0){
+    exit(-1);
+  }  
+
 
   return 0;
 }
