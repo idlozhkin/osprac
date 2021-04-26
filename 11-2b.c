@@ -32,9 +32,18 @@ int main(void)
     printf("Can\'t get msqid\n");
     exit(-1);
   }
+    for (i = 1; i <= 5; i++) {
+    maxlen = sizeof(mybuf.info);
+    if (( len = msgrcv(msqid, (struct msgbuf *) &mybuf, maxlen, 0, 0)) < 0) {
+      printf("Can\'t receive message from queue\n");
+      exit(-1);
+    }
+
+    printf("1 programm message type = %ld, sinfo = %i, finfo = %f\n", mybuf.mtype, mybuf.info.sinfo, mybuf.info.finfo);
+  }
 
   for (i = 1; i <= 5; i++) {
-    mybuf.mtype = 1;
+    mybuf.mtype = 2;
     mybuf.info.sinfo = 13;
     mybuf.info.finfo = 1.3;
     len = sizeof(mybuf.info);
@@ -45,19 +54,6 @@ int main(void)
       exit(-1);
     }
   }
-  
-  maxlen = sizeof(mybuf.info);
-
-    for (i = 1; i <= 5; i++) {
-    if (( len = msgrcv(msqid, (struct msgbuf *) &mybuf, maxlen, 0, 0)) < 0) {
-      printf("Can\'t receive message from queue\n");
-      exit(-1);
-    }
-
-    printf("1 programm message type = %ld, sinfo = %i, finfo = %f\n", mybuf.mtype, mybuf.info.sinfo, mybuf.info.finfo);
-  }
-
-
 
   return 0;
 }

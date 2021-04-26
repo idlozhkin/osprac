@@ -46,9 +46,9 @@ int main(void)
     }
   }
   
-  maxlen = sizeof(mybuf.info);
 
     for (i = 1; i <= 5; i++) {
+    maxlen = sizeof(mybuf.info);
     if (( len = msgrcv(msqid, (struct msgbuf *) &mybuf, maxlen, 0, 0)) < 0) {
       printf("Can\'t receive message from queue\n");
       exit(-1);
